@@ -28,7 +28,7 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential python
+        sudo apt-get install -y build-essential python3
     
     # Clean install dependencies to ensure bcrypt is properly built
     - name: Check for lock file and install dependencies
@@ -39,6 +39,6 @@ jobs:
           npm install
         fi
         
-    # Run the tests with increased timeout
+    # Run the tests
     - name: Run tests
-      run: npm test -- --verbose --forceExit 
+      run: npm test 
