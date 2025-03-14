@@ -13,4 +13,21 @@ module.exports = {
 
   // Environment for tests
   testEnvironment: "node",
+  
+  // Verbose output for diagnostics
+  verbose: true,
+  
+  // Force exit after tests are complete
+  forceExit: true,
+  
+  // Detect open handles (like database connections) that prevent Jest from exiting
+  detectOpenHandles: true,
+  
+  // TestPathIgnorePatterns: modules to ignore during tests
+  testPathIgnorePatterns: [
+    "/node_modules/"
+  ],
+  
+  // Setup file to run before tests
+  setupFilesAfterEnv: ['./jest.setup.js']
 }; 

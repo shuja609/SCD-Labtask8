@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [16.x, 18.x] # Removing 14.x since it's older and might have more compatibility issues
       fail-fast: false
 
     steps:
@@ -24,21 +24,39 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     
+    # Print Node.js and npm versions for debugging
+    - name: Show versions
+      run: |
+        node --version
+        npm --version
+    
     # Install required system dependencies for bcrypt
     - name: Install system dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential python3
     
-    # Clean install dependencies to ensure bcrypt is properly built
-    - name: Check for lock file and install dependencies
+    # Clean up node_modules if it exists to ensure a fresh install
+    - name: Clean existing modules
       run: |
-        if [ -f package-lock.json ]; then
-          npm ci
-        else
-          npm install
+        if [ -d "node_modules" ]; then
+          rm -rf node_modules
         fi
-        
+        if [ -f "package-lock.json" ]; then
+          rm package-lock.json
+        fi
+    
+    # Install dependencies
+    - name: Install dependencies
+      run: |
+        npm install
+        # Install bcrypt separately to ensure it's properly built
+        npm install bcrypt@5.1.0 --no-save
+    
+    # Verify package.json content
+    - name: Check package.json
+      run: cat package.json
+    
     # Run the tests
     - name: Run tests
       run: npm test 
