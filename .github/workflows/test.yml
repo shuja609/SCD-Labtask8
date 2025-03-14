@@ -17,11 +17,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    
+    # Install required system dependencies for bcrypt
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential python
+    
+    # Clean install dependencies to ensure bcrypt is properly built
     - name: Check for lock file and install dependencies
       run: |
         if [ -f package-lock.json ]; then
@@ -29,4 +38,7 @@ jobs:
         else
           npm install
         fi
-    - run: npm test 
+        
+    # Run the tests with increased timeout
+    - name: Run tests
+      run: npm test -- --verbose --forceExit 
